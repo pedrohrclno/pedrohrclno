@@ -1,7 +1,5 @@
 # Hi, i’m [Pedro Herculano](https://pedrohrclno.github.io/pedrohrclno/)
-### About me                                                                                                                          <div align="center">
-                                                                                                                                         <img src="./kof.gif" width="400">
-                                                                                                                                      </div>
+### About me                                                                                                                        
 
  - administration student
  - systems and code as a hobby
@@ -21,3 +19,7 @@ and there will be plenty of bullets to go around.
 ---
 
 ⭐ Thanks for visiting!
+
+<div align="center">
+  <img src="./kof.gif" width="400">
+</div>
