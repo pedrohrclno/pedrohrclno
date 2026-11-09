@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sky Raptor</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#010104;color:#eaf6ff;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh;display:grid;place-items:center;padding:18px}
+.stage{
+  position:relative;width:min(1100px,100%);aspect-ratio:16/7;min-height:280px;
+  overflow:hidden;isolation:isolate;border:1px solid rgba(210,230,255,.22);
+  background:#010104;
+  box-shadow:none;
+}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hud{position:absolute;inset:0;pointer-events:none;z-index:2}
+.title{
+ position:absolute;top:6%;left:0;width:100%;text-align:center;
+ font-size:clamp(18px,4vw,46px);font-weight:1000;font-style:italic;letter-spacing:.055em;
+ color:#f3fbff;text-transform:uppercase;
+ text-shadow:0 2px #2674b9,0 4px #09264b,0 0 16px #52caff99;
+}
+.title span{color:#dcecff}
+.tagline{position:absolute;top:22%;width:100%;text-align:center;
+ color:#aab8ca;font-size:clamp(7px,1vw,11px);letter-spacing:.42em;font-weight:bold}
+.hudline{position:absolute;left:3%;right:3%;bottom:5%;display:flex;justify-content:space-between;
+ color:#c4d3e7;font:700 clamp(8px,1vw,11px) monospace;letter-spacing:.12em;text-shadow:0 0 8px #32bfff}
+.corner{position:absolute;width:32px;height:32px;border-color:#c8d8ed;opacity:.65}
+.tl{top:12px;left:12px;border-top:2px solid;border-left:2px solid}
+.tr{top:12px;right:12px;border-top:2px solid;border-right:2px solid}
+.bl{bottom:12px;left:12px;border-bottom:2px solid;border-left:2px solid}
+.br{bottom:12px;right:12px;border-bottom:2px solid;border-right:2px solid}
+.scan{position:absolute;inset:0;pointer-events:none;opacity:.12;
+ background:repeating-linear-gradient(0deg,transparent 0 3px,#8bdcff 4px,transparent 5px);mix-blend-mode:screen}
+@media(max-width:600px){.stage{min-height:230px}.tagline{top:25%;letter-spacing:.2em}.hudline{bottom:4%}}
+@media(prefers-reduced-motion:reduce){.scan{display:none}}
+</style>
+</head>
+<body>
+<main class="stage" aria-label="Animação espacial de Sky Raptor">
+ <canvas id="space"></canvas>
+</main>
+<script>
+(() => {
+ const canvas=document.getElementById('space'),ctx=canvas.getContext('2d');
+ let w=0,h=0,dpr=1, last=0, elapsed=0, nextEnemySpawn=0, nextFire=0, stars=[], enemies=[], shots=[], particles=[];
+ const rand=(a,b)=>Math.random()*(b-a)+a;
+ function resize(){
+   const r=canvas.getBoundingClientRect(); dpr=Math.min(window.devicePixelRatio||1,2);
+   w=r.width;h=r.height;canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+   ctx.setTransform(dpr,0,0,dpr,0,0);
+   stars=Array.from({length:Math.max(115,Math.floor(w*h/1300))},()=>({x:rand(0,w),y:rand(0,h),z:rand(.35,1.8),a:rand(.25,.95)}));
+ }
+ function ship(x,y,s,color,enemy=false){
+   ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.scale(s,s);
+   if(!enemy){
+     // Nave arcade retrô azul-marinho com detalhes amarelos.
+     ctx.fillStyle='#10264f';
+     ctx.fillRect(-4,-25,8,43);
+     ctx.fillRect(-8,-14,16,25);
+     ctx.fillRect(-18,-3,36,8);
+     ctx.fillRect(-29,5,58,6);
+     ctx.fillRect(-23,11,12,5);ctx.fillRect(11,11,12,5);
+     ctx.fillStyle='#243f70';
+     ctx.fillRect(-3,-19,6,25);
+     ctx.fillRect(-24,7,13,3);ctx.fillRect(11,7,13,3);
+     ctx.fillStyle='#ffd43b';
+     ctx.fillRect(-3,-15,6,10);
+     ctx.fillRect(-25,7,7,3);ctx.fillRect(18,7,7,3);
+     ctx.fillStyle='#ffd43b';
+     ctx.fillRect(-1,24,2,7);
+     ctx.fillRect(-7,25,3,8);ctx.fillRect(4,25,3,8);
+   }else{
+     // Inimigo pixelado em vermelho escuro.
+     ctx.fillStyle='#a83242';
+     ctx.fillRect(-4,-13,8,23);
+     ctx.fillRect(-12,-6,24,13);
+     ctx.fillRect(-20,0,40,6);
+     ctx.fillRect(-15,6,8,5);ctx.fillRect(7,6,8,5);
+     ctx.fillStyle='#f06b70';
+     ctx.fillRect(-3,-10,6,6);
+     ctx.fillRect(-16,1,6,3);ctx.fillRect(10,1,6,3);
+   }
+   ctx.restore();
+ }
+ function spawnEnemy(){
+   const margin=Math.min(35,w*.15), x=rand(margin,Math.max(margin,w-margin)),y=rand(-45,-18),size=rand(.65,1.05);
+   enemies.push({x,y,baseX:x,speed:rand(32,62),phase:rand(0,Math.PI*2),size,hp:1});
+ }
+ function fire(px,py){
+   if(shots.length || !enemies.length) return;
+   let target=null, best=Infinity;
+   for(const e of enemies){
+     if(e.y >= py-18) continue;
+     const d=Math.hypot(e.x-px,e.y-py);
+     if(d<best){best=d;target=e;}
+   }
+   if(!target) return;
+   const dx=target.x-px, dy=target.y-(py-28), len=Math.hypot(dx,dy)||1;
+   const speed=390;
+   shots.push({x:px,y:py-28,vx:dx/len*speed,vy:dy/len*speed,life:2.4});
+ }
+ function burst(x,y,color){
+   for(let i=0;i<13;i++){const a=rand(0,Math.PI*2),v=rand(25,115);particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:rand(.25,.65),max:.65,color});}
+ }
+ function drawConstellation(t){
+   const groups=[
+    [[.12,.42],[.17,.34],[.23,.39],[.27,.28],[.34,.32]],
+    [[.72,.38],[.78,.30],[.84,.35],[.89,.24]],
+    [[.45,.53],[.50,.46],[.56,.50],[.60,.41]]
+   ];
+   ctx.save();ctx.strokeStyle='#6daee8';ctx.lineWidth=1;ctx.globalAlpha=.23;
+   groups.forEach((g,gi)=>{
+     ctx.beginPath();g.forEach((p,i)=>{let x=p[0]*w,y=p[1]*h+Math.sin(t*.25+gi)*3;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke();
+     g.forEach(p=>{ctx.fillStyle='#b8eaff';ctx.beginPath();ctx.arc(p[0]*w,p[1]*h,1.7,0,Math.PI*2);ctx.fill()});
+   });ctx.restore();
+ }
+ function frame(now){
+   const dt=last===0?0:Math.min((now-last)/1000,.033);last=now;elapsed+=dt;
+   ctx.clearRect(0,0,w,h);
+   // Estrelas em fluxo contínuo: sensação de avanço da nave.
+   stars.forEach(s=>{s.y+= (24+s.z*70)*dt;if(s.y>h){s.y=0;s.x=rand(0,w)}
+     ctx.globalAlpha=s.a;ctx.fillStyle='#ffffff';ctx.fillRect(s.x,s.y,s.z,s.z*2.3);
+   });ctx.globalAlpha=1;
+
+   // Nebulosas suaves no fundo.
+   
+   if(elapsed>=nextEnemySpawn){spawnEnemy();nextEnemySpawn=elapsed+1.35;}
+   
+   enemies.forEach(e=>{e.y+=e.speed*dt;e.x=e.baseX+Math.sin(elapsed*1.5+e.phase)*22;ship(e.x,e.y,e.size,'#ff6b55',true)});
+   shots.forEach(s=>{s.x+=s.vx*dt;s.y+=s.vy*dt;s.life-=dt;ctx.fillStyle='#ffd83d';ctx.fillRect(Math.round(s.x)-2,Math.round(s.y)-7,4,14);ctx.fillStyle='#fff2a6';ctx.fillRect(Math.round(s.x)-1,Math.round(s.y)-5,2,10)});
+   // Colisões simples entre tiros e inimigos.
+   for(let i=enemies.length-1;i>=0;i--){
+     const e=enemies[i],hit=shots.findIndex(s=>Math.hypot(s.x-e.x,s.y-e.y)<20*e.size);
+     if(hit>=0){shots.splice(hit,1);burst(e.x,e.y,'#dff7ff');burst(e.x,e.y,'#ff6470');enemies.splice(i,1)}
+   }
+   shots=shots.filter(s=>s.y>-20&&s.life>0);
+   enemies=enemies.filter(e=>e.y<h+40);
+   particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.fillStyle=p.color;ctx.fillRect(Math.round(p.x),Math.round(p.y),3,3)});
+   particles=particles.filter(p=>p.life>0);ctx.globalAlpha=1;
+   // Nave do jogador sempre avança e dispara.
+   const px=w*.5+Math.sin(elapsed*.8)*w*.018,py=h*.78+Math.sin(elapsed*2)*3;
+   if(elapsed>=nextFire){fire(px,py);nextFire=elapsed+0.38;}
+   ship(px,py,1.18,'#ffffff',false);
+   // Esteiras de propulsão.
+   ctx.save();ctx.globalAlpha=.65;ctx.strokeStyle='#e7f8ff';ctx.lineWidth=2;ctx.shadowColor='#a8eaff';ctx.shadowBlur=10;
+   const flame=31+Math.sin(elapsed*18)*4;
+   for(let i=-1;i<=1;i++){ctx.beginPath();ctx.moveTo(px+i*6,py+17);ctx.lineTo(px+i*7,py+flame+(i===0?4:0));ctx.stroke()}ctx.restore();
+   requestAnimationFrame(frame);
+ }
+ new ResizeObserver(resize).observe(canvas);
+ window.addEventListener("visibilitychange",()=>{last=0;});
+ resize();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
