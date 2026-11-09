@@ -1,16 +1,22 @@
-## Hi there 👋
+# Hi, i’m Pedro Herculano!
 
-<!--
-**pedrohrclno/pedrohrclno** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+### About me
 
-Here are some ideas to get you started:
+ - administration student
+ - systems and code as a hobby
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+### Technologies I know
+
+<div>
+  <img src="https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white">
+  <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white">
+</div>
+
+###  Goal
+
+I want to resolve all political conflicts in the world to establish global peace and solve the environmental crisis —
+and there will be plenty of bullets to go around.
+---
+
+⭐ Thanks for visiting!
