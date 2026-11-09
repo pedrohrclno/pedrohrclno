@@ -19,3 +19,7 @@ and there will be plenty of bullets to go around.
 ---
 
 ⭐ Thanks for visiting!
+
+<div align="center">
+  <img src="./kof.gif" width="400">
+</div>
