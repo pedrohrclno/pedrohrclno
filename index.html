@@ -1,0 +1,501 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Página pessoal de Pedro Herculano.">
+  <title>Pedro Herculano | Minha Homepage</title>
+
+  <style>
+    :root {
+      --navy: #000066;
+      --link: #0000ee;
+      --visited: #551a8b;
+      --text: #111111;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      padding: 18px 12px 30px;
+      background-color: #b8b8b8;
+      color: var(--text);
+      font-family: Verdana, Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.55;
+      background-image: radial-gradient(#999 0.6px, transparent 0.6px);
+      background-size: 4px 4px;
+    }
+
+    a { color: var(--link); text-decoration: underline; }
+    a:visited { color: var(--visited); }
+    a:hover { color: #cc0000; }
+
+    .site {
+      width: min(100%, 1050px);
+      margin: 0 auto;
+      background: white;
+      border: 2px solid;
+      border-color: white #404040 #404040 white;
+      box-shadow: 3px 3px 0 #777;
+    }
+
+    .topbar {
+      min-height: 34px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: white;
+      background: linear-gradient(90deg, #000044, #174b91);
+      font-weight: bold;
+    }
+
+    .brand {
+      padding: 22px 24px 18px;
+      background: #e5e5e5;
+      border-bottom: 1px solid #888;
+    }
+
+    .brand h1 {
+      margin: 0;
+      color: var(--navy);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(27px, 5vw, 43px);
+    }
+
+    .brand p { margin: 7px 0 0; color: #444; }
+
+    .ticker {
+      padding: 6px 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      color: #000066;
+      background: #ffffcc;
+      border-bottom: 1px solid #b6a65a;
+      font-family: "Courier New", monospace;
+      font-weight: bold;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 205px minmax(0, 1fr);
+      gap: 14px;
+      padding: 14px;
+      align-items: start;
+    }
+
+    aside {
+      padding: 12px;
+      background: #e8e8e8;
+      border: 2px solid;
+      border-color: #808080 white white #808080;
+    }
+
+    .side-title {
+      margin: 0 0 9px;
+      padding: 5px 7px;
+      color: white;
+      background: var(--navy);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .menu { list-style: none; padding: 0; margin: 0; }
+    .menu li { border-bottom: 1px solid #ccc; }
+
+    .menu a {
+      display: block;
+      padding: 8px 6px;
+      color: #000066;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .menu a:hover {
+      color: white;
+      background: #315b9a;
+      text-decoration: underline;
+    }
+
+    .side-note {
+      margin-top: 18px;
+      padding: 9px;
+      background: #ffffcc;
+      border: 1px dashed #99904d;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+    }
+
+    main { min-width: 0; }
+
+    section {
+      margin-bottom: 14px;
+      padding: 17px;
+      background: white;
+      border: 2px solid;
+      border-color: #808080 white white #808080;
+      scroll-margin-top: 12px;
+    }
+
+    .section-heading {
+      margin: 0 0 12px;
+      padding-bottom: 6px;
+      color: var(--navy);
+      border-bottom: 2px solid #d28b25;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 23px;
+    }
+
+    .intro {
+      min-height: 235px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: linear-gradient(135deg, white 0%, #f1f4fa 100%);
+    }
+
+    .eyebrow {
+      color: #555;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .intro h2 {
+      margin: 9px 0;
+      color: #000066;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(26px, 4vw, 39px);
+    }
+
+    .intro p { max-width: 650px; margin: 4px 0 14px; }
+
+    .classic-button {
+      display: inline-block;
+      width: fit-content;
+      padding: 7px 13px;
+      color: #000066 !important;
+      background: #dedede;
+      border: 2px solid;
+      border-color: white #555 #555 white;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .classic-button:active {
+      border-color: #555 white white #555;
+      transform: translate(1px, 1px);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .card {
+      padding: 12px;
+      background: #f1f1f1;
+      border: 1px solid #aaa;
+      box-shadow: 1px 1px 0 white inset;
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      color: #000066;
+      font-size: 15px;
+    }
+
+    .card p { margin: 0; font-size: 12px; }
+
+    .number {
+      display: inline-block;
+      margin-bottom: 5px;
+      color: #666;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .objective-box {
+      padding: 15px;
+      background: #ffffdd;
+      border: 1px dashed #9a8c42;
+    }
+
+    .objective-box p { margin: 0 0 10px; }
+    .objective-box p:last-child { margin-bottom: 0; }
+
+    .status {
+      margin-top: 12px;
+      padding: 8px;
+      color: #164516;
+      background: #e4f3e4;
+      border: 1px solid #9ab99a;
+      font-family: "Courier New", monospace;
+      font-size: 11px;
+    }
+
+    footer {
+      padding: 13px 16px;
+      color: white;
+      background: #000066;
+      text-align: center;
+      font-size: 11px;
+    }
+
+    footer p { margin: 3px 0; }
+
+    .back-top {
+      display: inline-block;
+      margin-top: 7px;
+      color: #ffff99 !important;
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 8px 5px 18px; }
+      .layout { grid-template-columns: 1fr; padding: 9px; }
+      .menu {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .menu li { border: 1px solid #ccc; }
+      .side-note { margin-top: 10px; }
+      .brand { padding: 17px; }
+      section { padding: 13px; }
+    }
+
+    @media (max-width: 470px) {
+      .cards { grid-template-columns: 1fr; }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .menu { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="site" id="topo">
+
+    <div class="topbar">
+      <span>PEDRO HERCULANO :: PÁGINA PESSOAL</span>
+      <small>Bem-vindo à minha homepage!</small>
+    </div>
+
+    <header class="brand">
+      <h1>Pedro Herculano</h1>
+      <p>Um pouco sobre mim, meus interesses e minhas experiências.</p>
+    </header>
+
+    <div class="ticker">
+      *** VOCÊ ESTÁ VISITANDO MINHA PÁGINA PESSOAL ***
+      FEITA POR CURIOSIDADE, CAFÉ E UM POUCO DE CÓDIGO ***
+    </div>
+
+    <div class="layout">
+
+      <aside>
+        <h2 class="side-title">Navegação</h2>
+
+        <ul class="menu">
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#sobre">Sobre mim</a></li>
+          <li><a href="#conhecimentos">Interesses</a></li>
+          <li><a href="#projetos">Projetos</a></li>
+          <li><a href="#objetivos">Objetivos</a></li>
+        </ul>
+
+        <div class="side-note">
+          <strong>Óculos?</strong> Confere.<br>
+          <strong>Chapéu?</strong> Confere.<br>
+          <strong>Cogumelos?</strong> Confere.<br>
+          <strong>Armado e preparado.</strong>
+        </div>
+      </aside>
+
+      <main>
+
+        <section class="intro" id="inicio">
+          <span class="eyebrow">Homepage pessoal :: 001</span>
+          <h2>Olá, visitante!<br>Eu sou Pedro Herculano.</h2>
+
+          <p>
+            Estudante de Administração, curioso por tecnologia
+            e alguém que gosta de explorar ideias, aprender coisas
+            novas e transformar hobbies em pequenos projetos.
+          </p>
+
+          <a class="classic-button" href="#sobre">
+            Entre e conheça um pouco mais >>
+          </a>
+        </section>
+
+        <section id="sobre">
+          <h2 class="section-heading">Sobre mim</h2>
+
+          <p>
+            A tecnologia sempre despertou minha curiosidade.
+            Mesmo não sendo minha área de formação, gosto de programação
+            e de experimentar algumas coisas nas horas vagas.
+          </p>
+
+          <p>
+            <strong>Programador por hobby</strong> nas horas vagas,
+            <strong>main Teemo</strong> de carteirinha e
+            <strong>fã nº 1 de Frank Ocean.</strong>
+          </p>
+
+          <p>
+            No fim das contas, sou alguém que gosta de aprender,
+            experimentar e descobrir novos interesses.
+          </p>
+        </section>
+
+        <section id="conhecimentos">
+          <h2 class="section-heading">Coisas que gosto de explorar</h2>
+
+          <p>
+            Não sou especialista em tudo isso, mas são assuntos
+            que despertam minha curiosidade e que gosto de
+            conhecer no meu próprio ritmo.
+          </p>
+
+          <div class="cards">
+
+            <article class="card">
+              <h3>Programação</h3>
+              <p>
+                Gosto de experimentar códigos, entender como
+                as aplicações funcionam e criar pequenas ideias.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>Desenvolvimento web</h3>
+              <p>
+                Criar páginas, brincar com HTML e CSS e descobrir
+                novas possibilidades para a internet.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>Tecnologia</h3>
+              <p>
+                Curiosidade por sistemas, ferramentas digitais,
+                inovação e tudo aquilo que envolve o universo tech.
+              </p>
+            </article>
+
+            <article class="card">
+              <h3>Administração</h3>
+              <p>
+                Interesse por gestão, organizações, planejamento
+                e pelas diferentes formas de administrar.
+              </p>
+            </article>
+
+          </div>
+        </section>
+
+        <section id="projetos">
+          <h2 class="section-heading">Projetos e experiências</h2>
+
+          <p>
+            Algumas experiências, projetos e certificações
+            que fazem parte da minha trajetória.
+          </p>
+
+          <div class="cards">
+
+            <article class="card">
+              <span class="number">01 / EXTENSÃO UNIVERSITÁRIA</span>
+              <h3>Projetos de extensão — UNINASSAU</h3>
+
+              <p>
+                Atuação em projetos de extensão da faculdade,
+                participando de atividades que proporcionaram
+                experiências além da sala de aula e contato
+                com diferentes realidades.
+              </p>
+            </article>
+
+            <article class="card">
+              <span class="number">02 / CERTIFICAÇÃO</span>
+              <h3>Scrum Fundamentals Certified</h3>
+
+              <p>
+                Certificação em fundamentos do Scrum, com
+                conhecimentos sobre metodologia ágil, organização
+                de equipes, papéis, eventos e gerenciamento
+                de projetos.
+              </p>
+            </article>
+
+            <article class="card">
+              <span class="number">03 / PROJETO PESSOAL</span>
+              <h3>Estrutura &amp; Banco de Dados</h3>
+
+              <p>
+                Projeto voltado à estruturação de um site de
+                consórcio de veículos, com foco na organização
+                das informações, estrutura do sistema e
+                desenvolvimento de banco de dados.
+              </p>
+            </article>
+
+          </div>
+        </section>
+
+        <section id="objetivos">
+          <h2 class="section-heading">O que vem pela frente?</h2>
+
+          <div class="objective-box">
+
+            <p>
+              Quero continuar minha graduação em Administração,
+              conhecer novas áreas e aproveitar as oportunidades
+              que surgirem durante minha trajetória.
+            </p>
+
+            <p>
+              Também pretendo continuar programando por hobby,
+              desenvolvendo projetos próprios e aprendendo
+              coisas novas sem transformar necessariamente
+              tudo isso em uma obrigação profissional.
+            </p>
+
+            <p>
+              Afinal, nem todo interesse precisa virar profissão.
+              Algumas coisas são legais simplesmente porque
+              gostamos de fazê-las.
+            </p>
+
+          </div>
+
+          <div class="status">
+            STATUS: APRENDENDO, EXPLORANDO E ATUALIZANDO A PÁGINA...
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <footer>
+      <p>Feito por <strong>Pedro Herculano</strong></p>
+      <p>Um hobby, algumas ideias e várias linhas de código.</p>
+      <p>© 2026 — Minha pequena parte da internet.</p>
+      <a class="back-top" href="#topo">Voltar ao início [↑]</a>
+    </footer>
+
+  </div>
+</body>
+</html>
